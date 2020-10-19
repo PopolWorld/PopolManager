@@ -24,18 +24,39 @@ async function getServerByID(req, res, next) {
   }
 
   // Save server and continue
+  res.token = found.token;
+  found.token = undefined;
   res.server = found;
   next();
 }
 
 // Get all servers
 router.get('/', async (req, res) => {
-    const servers = await server.findAll();
-    res.json(servers);
+  const servers = await server.findAll({
+    attributes: { exclude: ['token'] }
+  });
+  res.json(servers);
 });
 
 // Get server by id
 router.get('/:id', getServerByID, async (req, res) => {
+  res.json(res.server);
+});
+
+// Update server by id
+router.put('/:id', getServerByID, async (req, res) => {
+  // Check access (via token)
+  if (res.token != req.header('token')) {
+    return res.status(403).json({ message: 'Access denied' })
+  }
+
+  // Update server data
+  if (req.body.status) {
+    res.server.status = req.body.status;
+  }
+  await res.server.save({ fields: ['status'] });
+
+  // Return new response
   res.json(res.server);
 });
 

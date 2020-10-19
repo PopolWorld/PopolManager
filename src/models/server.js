@@ -41,10 +41,7 @@ const server = sequelize.define('server', {
   }
 }, {
   createdAt: false,
-  updatedAt: false,
-  defaultScope: {
-    attributes: { exclude: ['token'] },
-  }
+  updatedAt: false
 });
 
 // Export
