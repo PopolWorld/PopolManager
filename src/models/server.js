@@ -19,6 +19,11 @@ const server = sequelize.define('server', {
     type: Sequelize.STRING,
     allowNull: false
   },
+  port: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    unique: true
+  },
   slot: {
     type: Sequelize.INTEGER,
     allowNull: false,
@@ -33,6 +38,11 @@ const server = sequelize.define('server', {
     type: Sequelize.STRING,
     allowNull: false,
     defaultValue: 'offline'
+  },
+  players: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    defaultValue: 0
   },
   token: {
     type: Sequelize.STRING,

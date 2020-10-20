@@ -38,9 +38,15 @@ sequelize.authenticate().then(async () => {
 
   // Start minecraft servers
   console.log('Starting minecraft servers...')
-  const MinecraftServer = require('./models/minecraft');
-  const servers = await server.findAll();
-  servers.forEach(serv => new MinecraftServer(serv))
+  const minecraft = require('./models/minecraft');
+
+  // Handle exit
+  process.stdin.resume();
+  process.on('SIGINT', () => {
+    // Stop all servers before stopping process
+    console.log('Stopping servers...');
+    minecraft.stopAll(() => process.exit(0));
+  });
 }).catch(err => {
   console.error('Unable to connect to the database:', err)
 });
