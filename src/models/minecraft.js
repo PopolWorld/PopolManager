@@ -148,7 +148,7 @@ setInterval(async () => {
         // Start them
         servers.forEach(serv => new MinecraftServer(serv));
     }
-}, 10_000);
+}, 10000);
 
 // Export class
 module.exports = MinecraftServer;
