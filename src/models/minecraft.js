@@ -32,11 +32,7 @@ class MinecraftServer {
         }
 
         // Stop all
-        instances.forEach(serv => {
-            // TODO: Map bungee stop command to end
-            serv.dispatchCommand('stop');
-            serv.dispatchCommand('end');
-        });
+        instances.forEach(serv => serv.dispatchCommand('stop'));
     }
 
     // Constructor

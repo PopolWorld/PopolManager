@@ -20,6 +20,20 @@ const player = sequelize.define('player', {
     type: Sequelize.BIGINT,
     allowNull: false,
     defaultValue: 0
+  },
+  level: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  moderator: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
+  administrator: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
   }
 }, {
   createdAt: 'first_login',
