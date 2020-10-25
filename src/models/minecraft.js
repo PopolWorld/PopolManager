@@ -92,7 +92,8 @@ class MinecraftServer {
 
                 // Check if no more running and has an exit handler
                 if (!running && exitHandler !== undefined && instances.length == 0) {
-                    exitHandler();
+                    // Wait 3 seconds and stop
+                    setTimeout(exitHandler, 3000);
                 }
             })
         } catch (err) {
