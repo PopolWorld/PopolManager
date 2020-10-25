@@ -91,7 +91,7 @@ class MinecraftServer {
                 await this.serv.save();
 
                 // Check if no more running and has an exit handler
-                if (!running && exitHandler != undefined && instances.length == 0) {
+                if (!running && exitHandler !== undefined && instances.length == 0) {
                     exitHandler();
                 }
             })
@@ -125,7 +125,7 @@ class MinecraftServer {
     }
 
     dispatchCommand(cmd) {
-        if (this.process != undefined) {
+        if (this.process !== undefined) {
             this.process.stdin.write(cmd.toString().trim() + '\n');
         }
     }

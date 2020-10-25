@@ -88,10 +88,10 @@ router.get('/server/:id', getServerByID, async (req, res) => {
 // Update server by id
 router.put('/server/:id', getServerByID, checkToken, async (req, res) => {
     // Update server data
-    if (req.body.status) {
+    if (req.body.status !== undefined) {
         res.server.status = req.body.status;
     }
-    if (req.body.players) {
+    if (req.body.players !== undefined) {
         res.server.players = req.body.players;
     }
     await res.server.save({ fields: ['status', 'players'] });
