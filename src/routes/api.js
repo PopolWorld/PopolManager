@@ -135,7 +135,10 @@ router.put('/player/:uuid', checkToken, async (req, res) => {
         if (req.body.name !== undefined) {
             found.name = req.body.name;
         }
-        await found.save({ fields: ['name'] });
+        if (req.body.money !== undefined) {
+            found.money = req.body.money;
+        }
+        await found.save({ fields: ['name', 'money'] });
     } else if (req.body.name !== undefined) {
         // Create it
         found = await player.create({
