@@ -31,7 +31,8 @@ sequelize.authenticate().then(async () => {
   const app = express();
 
   // Register routes
-  app.use(vhost('api.*.*', require('./routes/api')));
+  app.use(vhost('api.popolworld.*', require('./routes/api/index')));
+  app.use(vhost('popolworld.*', require('./routes/www/index')));
 
   // Start listening
   app.listen(process.env.PORT || 3000, () => console.log('Web server started!'));
