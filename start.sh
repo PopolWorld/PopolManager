@@ -1,2 +1,1 @@
-git pull
-screen -dmS popolworld bash -c "npm start"
+screen -dmS popolworld bash -c "git pull && npm start"
