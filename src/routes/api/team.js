@@ -26,6 +26,25 @@ async function getTeamByID(req, res, next) {
     next();
 }
 
+// Get team leaderboard
+router.get('/leaderboard/:limit', async (req, res) => {
+    // Check limit
+    const limit = parseInt(req.params.limit);
+    if (limit === null || isNaN(limit)) {
+        // Limit is invalid
+        return res.status(400).json({ message: 'Invalid limit!' });
+    }
+
+    // Get first n teams
+    const leaderboard = await team.findAll({
+        order: [['money', 'DESC']],
+        limit: limit
+    });
+
+    // Return content
+    res.json(leaderboard);
+});
+
 // Get team by id
 router.get('/:id', getTeamByID, async (req, res) => {
     res.json(res.team);
