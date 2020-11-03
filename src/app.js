@@ -23,6 +23,7 @@ sequelize.authenticate().then(async () => {
   // Load all models
   const player = require('./models/player');
   const server = require('./models/server');
+  const team = require('./models/team');
 
   // Load the database structure
   await sequelize.sync();

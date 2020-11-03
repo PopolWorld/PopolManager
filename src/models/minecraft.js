@@ -65,7 +65,8 @@ class MinecraftServer {
             if (!fs.existsSync(path + '/plugins/PopolServer')) { fs.mkdirSync(path + '/plugins/PopolServer') }
             fs.writeFileSync(path + '/plugins/PopolServer/config.yml', yaml.safeDump({
                 'id': this.serv.id,
-                'token': this.serv.token
+                'token': this.serv.token,
+                'host': process.env.API_HOST !== undefined ? process.env.API_HOST : 'api.popolworld.fr'
             }));
             fs.writeFileSync(path + '/eula.txt', 'eula=true');
 
