@@ -25,6 +25,9 @@ sequelize.authenticate().then(async () => {
   const server = require('./models/server');
   const team = require('./models/team');
 
+  // Link between models
+  team.belongsToMany(player, { through: 'teams_members' });
+
   // Load the database structure
   await sequelize.sync();
 

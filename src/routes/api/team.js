@@ -6,13 +6,15 @@ const router = express.Router();
 
 // Get models
 const team = require('../../models/team');
+const player = require('../../models/player');
 const checkToken = require('./checkToken');
 
 // Middleware to get team by id
 async function getTeamByID(req, res, next) {
     // Get team from database
     const found = await team.findOne({
-        where: { id: req.params.id }
+        where: { id: req.params.id },
+        include: { model: player }
     });
 
     // Check if team was found
@@ -61,8 +63,24 @@ router.post('/', checkToken, async (req, res) => {
         return res.status(400).json({ message: 'Name already taken!' });
     }
 
+    // Get owner
+    if (req.body.owner === undefined) {
+        // No owner specified
+        return res.status(400).json({ message: 'No owner specified!' });
+    }
+    const owner = await player.findOne({
+        where: { uuid: req.body.owner }
+    });
+    if (owner === null) {
+        // Owner does not exist
+        return res.status(400).json({ message: 'Owner does not exist!' });
+    }
+
     // Everything is okay, create the team
     const created = await team.create({ name: req.body.name });
+
+    // Add owner to team
+    await created.addPlayer(owner);
 
     // Return the created item
     res.status(201).json(created);
