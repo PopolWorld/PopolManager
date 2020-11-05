@@ -6,27 +6,7 @@ const router = express.Router();
 
 // Get models
 const server = require('../../models/server');
-const checkToken = require('./checkToken');
-
-// Middleware to get server by id
-async function getServerByID(req, res, next) {
-    // Get server from database
-    const found = await server.findOne({
-        where: { id: req.params.id }
-    });
-
-    // Check if player was found
-    if (found === null) {
-        // If not, return with a 404
-        return res.status(404).json({ message: 'Server not found' });
-    }
-
-    // Save server and continue
-    res.token = found.token;
-    found.token = undefined;
-    res.server = found;
-    next();
-}
+const { checkToken, getServerByID } = require('./utils');
 
 // Get all servers
 router.get('/', async (req, res) => {

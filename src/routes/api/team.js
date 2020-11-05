@@ -7,26 +7,7 @@ const router = express.Router();
 // Get models
 const team = require('../../models/team');
 const player = require('../../models/player');
-const checkToken = require('./checkToken');
-
-// Middleware to get team by id
-async function getTeamByID(req, res, next) {
-    // Get team from database
-    const found = await team.findOne({
-        where: { id: req.params.id },
-        include: { model: player }
-    });
-
-    // Check if team was found
-    if (found === null) {
-        // If not, return with a 404
-        return res.status(404).json({ message: 'Team not found' });
-    }
-
-    // Save team and continue
-    res.team = found;
-    next();
-}
+const { checkToken, getPlayerByUUID, getTeamByID } = require('./utils');
 
 // Get team leaderboard
 router.get('/leaderboard/:limit', async (req, res) => {
@@ -83,6 +64,7 @@ router.post('/', checkToken, async (req, res) => {
     await created.addPlayer(owner);
 
     // Return the created item
+    await created.reload();
     res.status(201).json(created);
 });
 
@@ -98,6 +80,35 @@ router.put('/:id', checkToken, getTeamByID, async (req, res) => {
     await res.team.save({ fields: ['name', 'money'] });
 
     // Return new response
+    res.json(res.team);
+});
+
+// Delete a team by id
+router.delete('/:id', checkToken, getTeamByID, async (req, res) => {
+    // Delete team
+    res.team.destroy();
+
+    // Return new response
+    res.json({ message: 'Team deleted!' });
+});
+
+// Add team member
+router.post('/:id/:uuid', checkToken, getTeamByID, getPlayerByUUID, async (req, res) => {
+    // Add player to team
+    await res.team.addPlayer(res.player);
+
+    // Return new response
+    await res.team.reload();
+    res.json(res.team);
+});
+
+// Remove team member
+router.delete('/:id/:uuid', checkToken, getTeamByID, getPlayerByUUID, async (req, res) => {
+    // Remove player from team
+    await res.team.removePlayer(res.player);
+
+    // Return new response
+    await res.team.reload();
     res.json(res.team);
 });
 

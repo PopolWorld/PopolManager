@@ -6,25 +6,7 @@ const router = express.Router();
 
 // Get models
 const player = require('../../models/player');
-const checkToken = require('./checkToken');
-
-// Middleware to get player by uuid
-async function getPlayerByUUID(req, res, next) {
-    // Get player from database
-    const found = await player.findOne({
-        where: { uuid: req.params.uuid }
-    });
-
-    // Check if player was found
-    if (found === null) {
-        // If not, return with a 404
-        return res.status(404).json({ message: 'Player not found' });
-    }
-
-    // Save player and continue
-    res.player = found;
-    next();
-}
+const { checkToken, getPlayerByUUID } = require('./utils');
 
 // Get player by uuid
 router.get('/:uuid', getPlayerByUUID, async (req, res) => {
@@ -35,7 +17,8 @@ router.get('/:uuid', getPlayerByUUID, async (req, res) => {
 router.put('/:uuid', checkToken, async (req, res) => {
     // Get player from database
     let found = await player.findOne({
-        where: { uuid: req.params.uuid }
+        where: { uuid: req.params.uuid },
+        include: { model: team }
     });
 
     // Check if player exists
