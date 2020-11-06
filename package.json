@@ -11,7 +11,7 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-vue": "^5.15.1",
+    "express-vue": "^5.15.2",
     "js-yaml": "^3.14.0",
     "mysql2": "^2.2.5",
     "sequelize": "^6.3.5",
