@@ -35,7 +35,12 @@ async function getPlayerByUUID(req, res, next) {
     // Get player from database
     const found = await player.findOne({
         where: { uuid: req.params.uuid },
-        include: { model: team }
+        include: {
+            model: team,
+            through: {
+                attributes: ['role']
+            }
+        }
     });
 
     // Check if player was found
@@ -74,7 +79,12 @@ async function getTeamByID(req, res, next) {
     // Get team from database
     const found = await team.findOne({
         where: { id: req.params.id },
-        include: { model: player }
+        include: {
+            model: player,
+            through: {
+                attributes: ['role']
+            }
+        }
     });
 
     // Check if team was found

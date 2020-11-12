@@ -61,7 +61,7 @@ router.post('/', checkToken, async (req, res) => {
     const created = await team.create({ name: req.body.name });
 
     // Add owner to team
-    await created.addPlayer(owner);
+    await created.addPlayer(owner, { through: { role: 'owner' } });
 
     // Return the created item
     await created.reload();
@@ -95,7 +95,7 @@ router.delete('/:id', checkToken, getTeamByID, async (req, res) => {
 // Add team member
 router.post('/:id/:uuid', checkToken, getTeamByID, getPlayerByUUID, async (req, res) => {
     // Add player to team
-    await res.team.addPlayer(res.player);
+    await res.team.addPlayer(res.player, { through: { role: req.body.role !== undefined ? req.body.role : 'player' } });
 
     // Return new response
     await res.team.reload();
