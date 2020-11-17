@@ -66,6 +66,7 @@ class MinecraftServer {
             fs.writeFileSync(path + '/plugins/PopolServer/config.yml', yaml.safeDump({
                 'id': this.serv.id,
                 'token': this.serv.token,
+                'scheme': process.env.API_SCHEME !== undefined ? process.env.API_SCHEME : 'https',
                 'host': process.env.API_HOST !== undefined ? process.env.API_HOST : 'api.popolworld.fr'
             }));
             fs.writeFileSync(path + '/eula.txt', 'eula=true');
