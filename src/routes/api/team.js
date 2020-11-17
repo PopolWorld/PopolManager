@@ -58,7 +58,14 @@ router.post('/', checkToken, async (req, res) => {
     }
 
     // Everything is okay, create the team
-    const created = await team.create({ name: req.body.name });
+    const created = await team.create({ name: req.body.name }, {
+        include: {
+            model: player,
+            through: {
+                attributes: ['role']
+            }
+        }
+    });
 
     // Add owner to team
     await created.addPlayer(owner, { through: { role: 'owner' } });
