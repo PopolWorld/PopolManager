@@ -7,6 +7,7 @@ const router = express.Router();
 // Get models
 const player = require('../../models/player');
 const team = require('../../models/team');
+const job = require('../../models/job');
 const { checkToken, getPlayerByUUID } = require('./utils');
 
 // Get player by uuid
@@ -19,12 +20,17 @@ router.put('/:uuid', checkToken, async (req, res) => {
     // Get player from database
     let found = await player.findOne({
         where: { uuid: req.params.uuid },
-        include: {
-            model: team,
-            through: {
-                attributes: ['role']
+        include: [
+            {
+                model: team,
+                through: {
+                    attributes: ['role']
+                }
+            },
+            {
+                model: job
             }
-        }
+        ]
     });
 
     // Check if player exists

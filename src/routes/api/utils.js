@@ -2,6 +2,7 @@
 const player = require('../../models/player');
 const server = require('../../models/server');
 const team = require('../../models/team');
+const job = require('../../models/job');
 
 // Middleware to check server token
 async function checkToken(req, res, next) {
@@ -35,12 +36,17 @@ async function getPlayerByUUID(req, res, next) {
     // Get player from database
     const found = await player.findOne({
         where: { uuid: req.params.uuid },
-        include: {
-            model: team,
-            through: {
-                attributes: ['role']
+        include: [
+            {
+                model: team,
+                through: {
+                    attributes: ['role']
+                }
+            },
+            {
+                model: job
             }
-        }
+        ]
     });
 
     // Check if player was found
@@ -98,10 +104,32 @@ async function getTeamByID(req, res, next) {
     next();
 }
 
+// Middleware to get job by player
+async function getJobByPlayer(req, res, next) {
+    // Get job from database
+    const found = await job.findOne({
+        where: {
+            job: req.params.job,
+            playerUuid: res.player.uuid
+        }
+    });
+
+    // Check if job was found
+    if (found === null) {
+        // If not, return with a 404
+        return res.status(404).json({ message: 'Job not found for this player' });
+    }
+
+    // Save job and continue
+    res.job = found;
+    next();
+}
+
 // Export
 module.exports = {
     checkToken,
     getPlayerByUUID,
     getServerByID,
-    getTeamByID
+    getTeamByID,
+    getJobByPlayer
 };

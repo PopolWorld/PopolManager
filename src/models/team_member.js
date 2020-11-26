@@ -5,7 +5,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('./database');
 
 // Create the model
-const team_members = sequelize.define('team_member', {
+const team_member = sequelize.define('team_member', {
   role: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -19,4 +19,4 @@ const team_members = sequelize.define('team_member', {
 });
 
 // Export
-module.exports = team_members;
+module.exports = team_member;

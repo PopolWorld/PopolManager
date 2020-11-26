@@ -11,6 +11,7 @@ router.use(express.json());
 router.use('/player', require('./player'));
 router.use('/server', require('./server'));
 router.use('/team', require('./team'));
+router.use('/job', require('./job'));
 
 // Export
 module.exports = router;
