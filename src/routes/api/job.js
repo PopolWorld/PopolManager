@@ -10,7 +10,7 @@ const job = require('../../models/job');
 const { checkToken, getPlayerByUUID, getJobByPlayer } = require('./utils');
 
 // Get job by player and name
-router.get('/:uuid/:job', checkToken, getPlayerByUUID, getJobByPlayer, async (req, res) => {
+router.get('/:uuid/:job', getPlayerByUUID, getJobByPlayer, async (req, res) => {
     res.json(res.job);
 });
 

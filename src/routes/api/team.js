@@ -1,5 +1,6 @@
 // Import modules
 const express = require('express');
+const { Op } = require('sequelize');
 
 // Create a router
 const router = express.Router();
@@ -21,6 +22,11 @@ router.get('/leaderboard/:limit', async (req, res) => {
 
     // Get first n teams
     const leaderboard = await team.findAll({
+        where: {
+            money: {
+                [Op.gt]: 0
+            }
+        },
         order: [['money', 'DESC']],
         limit: limit
     });
