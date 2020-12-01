@@ -90,7 +90,7 @@ router.post('/:uuid/:job', checkToken, getPlayerByUUID, async (req, res) => {
     });
 
     // Return created item
-    res.json(created);
+    res.status(201).json(created);
 });
 
 // Export
