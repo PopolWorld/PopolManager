@@ -125,11 +125,25 @@ async function getJobByPlayer(req, res, next) {
     next();
 }
 
+// Middleware to get jobs by player
+async function getJobsByPlayer(req, res, next) {
+    // Get jobs from database
+    res.jobs = await job.findAll({
+        where: {
+            playerUuid: res.player.uuid
+        }
+    });
+
+    // Continue
+    next();
+}
+
 // Export
 module.exports = {
     checkToken,
     getPlayerByUUID,
     getServerByID,
     getTeamByID,
-    getJobByPlayer
+    getJobByPlayer,
+    getJobsByPlayer
 };

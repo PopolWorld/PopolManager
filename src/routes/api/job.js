@@ -1,5 +1,6 @@
 // Import modules
 const express = require('express');
+const { Op } = require('sequelize');
 
 // Create a router
 const router = express.Router();
@@ -7,7 +8,40 @@ const router = express.Router();
 // Get models
 const player = require('../../models/player');
 const job = require('../../models/job');
-const { checkToken, getPlayerByUUID, getJobByPlayer } = require('./utils');
+const { checkToken, getPlayerByUUID, getJobByPlayer, getJobsByPlayer } = require('./utils');
+
+// Get jobs leaderboard
+router.get('/leaderboard/:limit', async (req, res) => {
+    // Check limit
+    const limit = parseInt(req.params.limit);
+    if (limit === null || isNaN(limit)) {
+        // Limit is invalid
+        return res.status(400).json({ message: 'Invalid limit!' });
+    }
+
+    // Get first n teams
+    const leaderboard = await job.findAll({
+        where: {
+            experience: {
+                [Op.gt]: 0
+            }
+        },
+        order: [['experience', 'DESC']],
+        limit: limit,
+        include: {
+            model: player,
+            attributes: ['name']
+        }
+    });
+
+    // Return content
+    res.json(leaderboard);
+});
+
+// Get job by player
+router.get('/:uuid', getPlayerByUUID, getJobsByPlayer, async (req, res) => {
+    res.json(res.jobs);
+});
 
 // Get job by player and name
 router.get('/:uuid/:job', getPlayerByUUID, getJobByPlayer, async (req, res) => {
@@ -46,7 +80,7 @@ router.post('/:uuid/:job', checkToken, getPlayerByUUID, async (req, res) => {
     }
 
     // Disable currently active job (if there is one)
-    job.update({ active: false }, { where: { playerUuid: res.player.uuid } });
+    await job.update({ active: false }, { where: { playerUuid: res.player.uuid } });
 
     // Create the job
     const created = await job.create({
