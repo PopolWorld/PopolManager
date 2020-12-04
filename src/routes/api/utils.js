@@ -1,8 +1,12 @@
+// Import modules
+const { Op } = require('sequelize');
+
 // Get models
 const player = require('../../models/player');
 const server = require('../../models/server');
 const team = require('../../models/team');
 const job = require('../../models/job');
+const chunk = require('../../models/chunk');
 
 // Middleware to check server token
 async function checkToken(req, res, next) {
@@ -67,7 +71,7 @@ async function getServerByID(req, res, next) {
         where: { id: req.params.id }
     });
 
-    // Check if player was found
+    // Check if server was found
     if (found === null) {
         // If not, return with a 404
         return res.status(404).json({ message: 'Server not found' });
@@ -138,6 +142,47 @@ async function getJobsByPlayer(req, res, next) {
     next();
 }
 
+// Middleware to get chunk by coordinates
+async function getChunkByCoordinates(req, res, next) {
+    // Get chunk from database
+    const found = await chunk.findOne({
+        where: {
+            x: req.params.x,
+            z: req.params.z
+        }
+    });
+
+    // Check if chunk was found
+    if (found === null) {
+        // If not, return with a 404
+        return res.status(404).json({ message: 'Chunk not found' });
+    }
+
+    // Save chunk and continue
+    res.chunk = found;
+    next();
+}
+
+// Middleware to get chunks by region
+async function getChunksByRegion(req, res, next) {
+    // Get chunks from database
+    res.region = await chunk.findAll({
+        where: {
+            x: {
+                [Op.gte]: req.params.x * 32,
+                [Op.lt]: (req.params.x + 1) * 32
+            },
+            z: {
+                [Op.gte]: req.params.z * 32,
+                [Op.lt]: (req.params.z + 1) * 32
+            }
+        }
+    });
+
+    // Continue
+    next();
+}
+
 // Export
 module.exports = {
     checkToken,
@@ -145,5 +190,7 @@ module.exports = {
     getServerByID,
     getTeamByID,
     getJobByPlayer,
-    getJobsByPlayer
+    getJobsByPlayer,
+    getChunkByCoordinates,
+    getChunksByRegion
 };

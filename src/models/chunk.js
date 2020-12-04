@@ -5,26 +5,20 @@ const Sequelize = require('sequelize');
 const sequelize = require('./database');
 
 // Create the model
-const job = sequelize.define('job', {
+const chunk = sequelize.define('chunk', {
     id: {
         type: Sequelize.BIGINT,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true
     },
-    job: {
-        type: Sequelize.STRING,
+    x: {
+        type: Sequelize.BIGINT,
         allowNull: false
     },
-    experience: {
+    z: {
         type: Sequelize.BIGINT,
-        allowNull: false,
-        defaultValue: 0
-    },
-    active: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
+        allowNull: false
     }
 }, {
     createdAt: false,
@@ -32,4 +26,4 @@ const job = sequelize.define('job', {
 });
 
 // Export
-module.exports = job;
+module.exports = chunk;

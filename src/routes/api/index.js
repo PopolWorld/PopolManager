@@ -12,6 +12,7 @@ router.use('/player', require('./player'));
 router.use('/server', require('./server'));
 router.use('/team', require('./team'));
 router.use('/job', require('./job'));
+router.use('/chunk', require('./chunk'));
 
 // Export
 module.exports = router;

@@ -26,6 +26,7 @@ sequelize.authenticate().then(async () => {
   const team = require('./models/team');
   const team_member = require('./models/team_member');
   const job = require('./models/job');
+  const chunk = require('./models/chunk');
 
   // Link players and teams
   team.belongsToMany(player, { through: team_member });
@@ -34,6 +35,10 @@ sequelize.authenticate().then(async () => {
   // Link players and jobs
   job.belongsTo(player);
   player.hasMany(job);
+
+  // Link chunks and teams
+  chunk.belongsTo(team);
+  team.hasMany(chunk);
 
   // Load the database structure
   await sequelize.sync();
