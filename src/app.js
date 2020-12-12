@@ -55,6 +55,7 @@ sequelize.authenticate().then(async () => {
 
   // Start minecraft servers
   console.log('Starting minecraft servers...')
+  await server.update({ status: 'offline' }, { where: { status: 'online' } });
   const minecraft = require('./models/minecraft');
 
   // Handle exit

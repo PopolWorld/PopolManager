@@ -165,17 +165,15 @@ async function getChunkByCoordinates(req, res, next) {
 
 // Middleware to get chunks by region
 async function getChunksByRegion(req, res, next) {
+    // Convert params to numbers
+    const x = parseInt(req.params.x);
+    const z = parseInt(req.params.z);
+
     // Get chunks from database
     res.region = await chunk.findAll({
         where: {
-            x: {
-                [Op.gte]: req.params.x * 32,
-                [Op.lt]: (req.params.x + 1) * 32
-            },
-            z: {
-                [Op.gte]: req.params.z * 32,
-                [Op.lt]: (req.params.z + 1) * 32
-            }
+            x: { [Op.between]: [x * 32, (x + 1) * 32 - 1] },
+            z: { [Op.between]: [z * 32, (z + 1) * 32 - 1] }
         }
     });
 
